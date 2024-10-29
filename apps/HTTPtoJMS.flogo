@@ -1,0 +1,329 @@
+{
+  "imports": [
+    "github.com/project-flogo/flow",
+    "github.com/project-flogo/contrib/activity/noop",
+    "github.com/tibco/flogo-general/src/app/General/activity/log",
+    "github.com/tibco/flogo-ems/src/app/EMS/activity/sendmessage",
+    "github.com/tibco/flogo-general/src/app/General/activity/actreply",
+    "github.com/tibco/wi-plugins/contributions/http/src/app/HTTP/trigger/server",
+    "github.com/project-flogo/contrib/function/array",
+    "github.com/tibco/flogo-ems/src/app/EMS/connector/ems"
+  ],
+  "name": "HTTPtoJMS",
+  "description": "",
+  "version": "1.0.0",
+  "type": "flogo:app",
+  "appModel": "1.1.1",
+  "tags": [],
+  "triggers": [
+    {
+      "ref": "#server",
+      "name": "tibco-flogo-http-trigger",
+      "description": "A simple HTTP server",
+      "settings": {
+        "port": "=$property[\"Port\"]",
+        "processingMode": "Data"
+      },
+      "id": "HTTPServer",
+      "handlers": [
+        {
+          "description": "",
+          "settings": {
+            "contextPath": "/dest",
+            "mode": "Proxy",
+            "reqMethod": "POST"
+          },
+          "action": {
+            "ref": "github.com/project-flogo/flow",
+            "settings": {
+              "flowURI": "res://flow:HTTPtoJMS"
+            },
+            "input": {
+              "pathParams": "=$.pathParams",
+              "queryParams": "=$.queryParams",
+              "headers": "=$.headers",
+              "method": "=$.method",
+              "requestBody": "=$.requestBody"
+            },
+            "output": {
+              "statusCode": "=$.statusCode",
+              "headers": "=$.headers",
+              "responseBody": "=$.responseBody",
+              "cookies": {
+                "mapping": {
+                  "@foreach($.cookies,cookies)": {
+                    "=": "$loop"
+                  }
+                }
+              }
+            }
+          },
+          "schemas": {
+            "output": {
+              "proxyData": {
+                "type": "json",
+                "value": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"\",\"type\":\"undefined\"}",
+                "fe_metadata": "\"\"",
+                "feSchemaMap": {}
+              }
+            }
+          },
+          "name": "HTTPtoJMS"
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "flow:HTTPtoJMS",
+      "data": {
+        "name": "HTTPtoJMS",
+        "description": "",
+        "links": [
+          {
+            "id": 1,
+            "from": "StartActivity",
+            "to": "LogMessage",
+            "type": "label",
+            "label": "StartActivity to LogMessage"
+          },
+          {
+            "id": 2,
+            "from": "LogMessage",
+            "to": "EMSSendMessage",
+            "type": "label",
+            "label": "LogMessage to EMSSendMessage"
+          },
+          {
+            "id": 3,
+            "from": "EMSSendMessage",
+            "to": "ReplyToTrigger",
+            "type": "label",
+            "label": "EMSSendMessage to ReplyToTrigger"
+          }
+        ],
+        "tasks": [
+          {
+            "id": "StartActivity",
+            "name": "StartActivity",
+            "description": "NoOp Activity",
+            "activity": {
+              "ref": "#noop"
+            }
+          },
+          {
+            "id": "LogMessage",
+            "name": "LogMessage",
+            "description": "Simple Log Message Activity",
+            "activity": {
+              "ref": "#log",
+              "input": {
+                "Log Level": "INFO",
+                "flowInfo": false,
+                "message": "",
+                "logLevel": ""
+              }
+            }
+          },
+          {
+            "id": "EMSSendMessage",
+            "name": "EMSSendMessage",
+            "description": "",
+            "activity": {
+              "ref": "#sendmessage",
+              "settings": {
+                "connection": "conn://61e90e11-8a34-4d10-bd10-0a39a15fdab6",
+                "destinationType": "Queue",
+                "settingDestination": "dest",
+                "deliveryDelay": 0
+              },
+              "input": {
+                "message": "=$flow.requestBody",
+                "destination": ""
+              },
+              "schemas": {
+                "input": {
+                  "headers": {
+                    "type": "json",
+                    "value": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"correlationID\":{\"type\":\"string\"},\"replyTo\":{\"type\":\"string\"},\"deliveryMode\":{\"type\":\"string\"},\"expiration\":{\"type\":\"integer\"},\"priority\":{\"type\":\"integer\"}}}",
+                    "fe_metadata": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"correlationID\":{\"type\":\"string\"},\"replyTo\":{\"type\":\"string\"},\"deliveryMode\":{\"type\":\"string\"},\"expiration\":{\"type\":\"integer\"},\"priority\":{\"type\":\"integer\"}}}",
+                    "feSchemaMap": {}
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": "ReplyToTrigger",
+            "name": "ReplyToTrigger",
+            "description": "Reply back to the trigger and continue flow execution, it must be used only in the flow with the trigger configured.",
+            "activity": {
+              "ref": "#actreply",
+              "input": {
+                "reply": {
+                  "mapping": {
+                    "statusCode": 200,
+                    "responseBody": "=$flow.requestBody",
+                    "headers": "=$flow.headers",
+                    "cookies": [
+                      "",
+                      ""
+                    ]
+                  }
+                }
+              },
+              "schemas": {
+                "input": {
+                  "reply": {
+                    "type": "json",
+                    "value": "{\"type\":\"object\",\"title\":\"Inputs\",\"properties\":{\"statusCode\":{\"type\":\"integer\",\"required\":false},\"headers\":{\"type\":\"params\",\"enablecoercing\":true},\"responseBody\":{\"type\":\"any\",\"required\":false,\"enablecoercing\":true},\"cookies\":{\"type\":\"array\",\"enablecoercing\":true}},\"required\":[]}",
+                    "fe_metadata": "{\"type\":\"object\",\"title\":\"Inputs\",\"properties\":{\"statusCode\":{\"type\":\"integer\",\"required\":false},\"headers\":{\"type\":\"params\",\"enablecoercing\":true},\"responseBody\":{\"type\":\"any\",\"required\":false,\"enablecoercing\":true},\"cookies\":{\"type\":\"array\",\"enablecoercing\":true}},\"required\":[]}",
+                    "feSchemaMap": {}
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyMTYsInkiOjk1fSwiRU1TU2VuZE1lc3NhZ2UiOnsieCI6NDM3LCJ5Ijo4OH0sIlJlcGx5VG9UcmlnZ2VyIjp7IngiOjY1MywieSI6OTZ9fQ==",
+        "metadata": {
+          "input": [
+            {
+              "name": "pathParams",
+              "type": "params"
+            },
+            {
+              "name": "queryParams",
+              "type": "params"
+            },
+            {
+              "name": "headers",
+              "type": "params"
+            },
+            {
+              "name": "method",
+              "type": "string"
+            },
+            {
+              "name": "requestBody",
+              "type": "any"
+            }
+          ],
+          "output": [
+            {
+              "name": "statusCode",
+              "type": "integer"
+            },
+            {
+              "name": "headers",
+              "type": "params"
+            },
+            {
+              "name": "responseBody",
+              "type": "any"
+            },
+            {
+              "name": "cookies",
+              "type": "array"
+            }
+          ],
+          "fe_metadata": {
+            "input": "{\"type\":\"object\",\"title\":\"HTTPServer\",\"properties\":{\"pathParams\":{\"type\":\"params\"},\"queryParams\":{\"type\":\"params\"},\"headers\":{\"type\":\"params\"},\"method\":{\"type\":\"string\",\"required\":false},\"requestBody\":{\"type\":\"any\",\"required\":false}}}",
+            "output": "{\"type\":\"object\",\"title\":\"Inputs\",\"properties\":{\"statusCode\":{\"type\":\"integer\",\"required\":false},\"headers\":{\"type\":\"params\",\"enablecoercing\":true},\"responseBody\":{\"type\":\"any\",\"required\":false,\"enablecoercing\":true},\"cookies\":{\"type\":\"array\",\"enablecoercing\":true}},\"required\":[]}"
+          }
+        }
+      }
+    }
+  ],
+  "properties": [
+    {
+      "name": "EMS.localEMS.ServerUrl",
+      "type": "string",
+      "value": "tcp://localhost:7222"
+    },
+    {
+      "name": "EMS.localEMS.User_Name",
+      "type": "string",
+      "value": "admin"
+    },
+    {
+      "name": "EMS.localEMS.Password",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "EMS.localEMS.Reconnect_Count",
+      "type": "float64",
+      "value": 4
+    },
+    {
+      "name": "EMS.localEMS.Reconnect_Delay",
+      "type": "float64",
+      "value": 500
+    },
+    {
+      "name": "EMS.localEMS.Retry_Timeout",
+      "type": "float64",
+      "value": 300
+    },
+    {
+      "name": "Port",
+      "type": "float64",
+      "value": 9173
+    }
+  ],
+  "connections": {
+    "61e90e11-8a34-4d10-bd10-0a39a15fdab6": {
+      "id": "61e90e11-8a34-4d10-bd10-0a39a15fdab6",
+      "name": "localEMS",
+      "ref": "#ems",
+      "isGlobal": false,
+      "settings": {
+        "name": "localEMS",
+        "description": "Ems client configuration",
+        "serverUrl": "=$property[\"EMS.localEMS.ServerUrl\"]",
+        "authenticationMode": "None",
+        "userName": "=$property[\"EMS.localEMS.User_Name\"]",
+        "password": "=$property[\"EMS.localEMS.Password\"]",
+        "clientCert": "",
+        "clientKey": "",
+        "caCert": "",
+        "privateKeyPassword": "",
+        "noVerifyHostname": true,
+        "reconnectCount": "=$property[\"EMS.localEMS.Reconnect_Count\"]",
+        "reconnectDelay": "=$property[\"EMS.localEMS.Reconnect_Delay\"]",
+        "reconnectTimeout": "=$property[\"EMS.localEMS.Retry_Timeout\"]"
+      }
+    }
+  },
+  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsicmVmIjoiZ2l0aHViLmNvbS90aWJjby9mbG9nby1lbXMvc3JjL2FwcC9FTVMiLCJpZCI6IkVNUyIsInZlcnNpb24iOiIxLjAuMCIsInRhZyI6IjEuMC4wLWIxMyIsIm5hbWUiOiJUSUJDTyBFbnRlcnByaXNlIE1lc3NhZ2UgU2VydmljZSIsInMzbG9jYXRpb24iOiJUaWJjby9FTVMiLCJpc1VzZXJFeHRlbnNpb24iOmZhbHNlfV0=",
+  "metadata": {
+    "endpoints": [
+      {
+        "protocol": "http",
+        "port": "9173",
+        "title": "HTTPServer",
+        "type": "public",
+        "swagger": {
+          "swagger": "2.0",
+          "info": {
+            "title": "HTTPServer",
+            "version": "1.0.0",
+            "description": "A simple HTTP server"
+          },
+          "paths": {
+            "/dest": {
+              "post": {
+                "summary": "HTTPtoJMS",
+                "operationId": "postdest",
+                "parameters": [],
+                "responses": {}
+              }
+            }
+          }
+        }
+      }
+    ],
+    "flogoVersion": "2.25.1"
+  }
+}
