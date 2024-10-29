@@ -1,4 +1,4 @@
-module github.com/davewins/flogoXpath
+module github.com/davewins/FlogoWorkspace/functions/flogoXpath
 
 go 1.23.2
 
