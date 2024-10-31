@@ -121,7 +121,7 @@
               "input": {
                 "Log Level": "INFO",
                 "flowInfo": false,
-                "message": "=flogoXpath.xpath(\"//transaction_ID[. = '123456']\", $flow.requestBody)",
+                "message": "=flogoXpath.xpath(\"//transactions\", $flow.requestBody)",
                 "logLevel": ""
               }
             }
