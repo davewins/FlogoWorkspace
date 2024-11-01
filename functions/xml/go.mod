@@ -1,4 +1,4 @@
-module github.com/davewins/xml
+module github.com/davewins/FlogoWorkspacefunctions/xml
 
 go 1.23.2
 

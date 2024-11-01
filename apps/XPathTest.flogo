@@ -49,7 +49,7 @@
               "responseBody": "=$.responseBody",
               "cookies": {
                 "mapping": {
-                  "@foreach($.cookies, cookies)": {
+                  "@foreach($.cookies,cookies)": {
                     "=": "$loop"
                   }
                 }
