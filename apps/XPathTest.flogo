@@ -3,10 +3,12 @@
     "github.com/project-flogo/flow",
     "github.com/project-flogo/contrib/activity/noop",
     "github.com/tibco/flogo-general/src/app/General/activity/log",
+    "github.com/project-flogo/contrib/activity/actreturn",
     "github.com/tibco/wi-plugins/contributions/http/src/app/HTTP/trigger/server",
     "github.com/project-flogo/contrib/function/array",
+    "github.com/project-flogo/contrib/function/coerce",
     "git.tibco.com/git/product/ipaas/wi-contrib.git/function/boolean",
-    "github.com/davewins/FlogoWorkspacefunctions/xml"
+    "github.com/davewins/FlogoWorkspace/functions/xml"
   ],
   "name": "XPathTest",
   "description": "",
@@ -35,13 +37,14 @@
           "action": {
             "ref": "github.com/project-flogo/flow",
             "settings": {
-              "flowURI": "res://flow:New_flow"
+              "flowURI": "res://flow:TestXPATH"
             },
             "input": {
               "pathParams": "=$.pathParams",
-              "headers": "=$.queryParams",
+              "headers": "=$.headers",
               "method": "=$.method",
-              "requestBody": "=$.requestBody"
+              "requestBody": "=$.requestBody",
+              "queryParams": "=$.queryParams"
             },
             "output": {
               "statusCode": "=$.statusCode",
@@ -66,16 +69,16 @@
               }
             }
           },
-          "name": "New_flow"
+          "name": "TestXPATH"
         }
       ]
     }
   ],
   "resources": [
     {
-      "id": "flow:New_flow",
+      "id": "flow:TestXPATH",
       "data": {
-        "name": "New_flow",
+        "name": "TestXPATH",
         "description": "",
         "links": [
           {
@@ -84,6 +87,13 @@
             "to": "LogMessage",
             "type": "label",
             "label": "StartActivity to LogMessage"
+          },
+          {
+            "id": 2,
+            "from": "LogMessage",
+            "to": "Return",
+            "type": "label",
+            "label": "LogMessage to Return"
           }
         ],
         "tasks": [
@@ -104,13 +114,27 @@
               "input": {
                 "Log Level": "INFO",
                 "flowInfo": false,
-                "message": "=xml.xpath(\"/root/transactions[transaction/@id=1]\", $flow.requestBody, boolean.true())",
+                "message": "=xml.xpath(coerce.toString($flow.queryParams), $flow.requestBody, boolean.true())",
                 "logLevel": ""
+              }
+            }
+          },
+          {
+            "id": "Return",
+            "name": "Return",
+            "description": "Simple Return Activity",
+            "activity": {
+              "ref": "#actreturn",
+              "settings": {
+                "mappings": {
+                  "statusCode": 200,
+                  "responseBody": "ok"
+                }
               }
             }
           }
         ],
-        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyNTgsInkiOjkxfX0=",
+        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyNjAsInkiOjk2fSwiUmV0dXJuIjp7IngiOjYzMCwieSI6OTl9fQ==",
         "metadata": {
           "input": [
             {
@@ -162,7 +186,7 @@
   ],
   "properties": [],
   "connections": {},
-  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsiaWQiOiJ4bWwiLCJyZWYiOiJnaXRodWIuY29tL2RhdmV3aW5zL0Zsb2dvV29ya3NwYWNlZnVuY3Rpb25zL3htbCIsIm5hbWUiOiJ4cGF0aCIsInZlcnNpb24iOiIwLjAuMWEiLCJ0YWciOiIwLjAuMWEiLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0veG1sIiwiaXNVc2VyRXh0ZW5zaW9uIjp0cnVlfV0=",
+  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsiaWQiOiJ4bWwiLCJyZWYiOiJnaXRodWIuY29tL2RhdmV3aW5zL0Zsb2dvV29ya3NwYWNlL2Z1bmN0aW9ucy94bWwiLCJuYW1lIjoieHBhdGgiLCJ2ZXJzaW9uIjoiMC4wLjFhIiwidGFnIjoiMC4wLjFhIiwiczNsb2NhdGlvbiI6IntVU0VSSUR9L3htbCIsImlzVXNlckV4dGVuc2lvbiI6dHJ1ZX1d",
   "metadata": {
     "endpoints": [
       {
@@ -180,7 +204,7 @@
           "paths": {
             "/dest": {
               "post": {
-                "summary": "New_flow",
+                "summary": "TestXPATH",
                 "operationId": "postdest",
                 "parameters": [],
                 "responses": {}
