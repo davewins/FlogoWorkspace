@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "title": "Daves Sample Activity",
   "description": "Sample Activity",
-  "ref": "github.com/project-flogo/contrib/activity/xml2json",
+  "ref": "github.com/davewins/FlogoWorkspace/extensions/testActivity",
   "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "settings": [
     {
