@@ -7,7 +7,8 @@
     "github.com/tibco/flogo-general/src/app/General/activity/actreply",
     "github.com/tibco/wi-plugins/contributions/http/src/app/HTTP/trigger/server",
     "github.com/project-flogo/contrib/function/array",
-    "github.com/davewins/FlogoWorkspace/functions/flogoXpath",
+    "git.tibco.com/git/product/ipaas/wi-contrib.git/function/boolean",
+    "github.com/davewins/FlogoWorkspace/functions/xml",
     "github.com/tibco/flogo-ems/src/app/EMS/connector/ems"
   ],
   "name": "HTTPtoJMS",
@@ -121,7 +122,7 @@
               "input": {
                 "Log Level": "INFO",
                 "flowInfo": false,
-                "message": "=flogoXpath.xpath(\"//transactions\", $flow.requestBody)",
+                "message": "=xml.xpath(\"//transactions\", $flow.requestBody,boolean.true())",
                 "logLevel": ""
               }
             }
@@ -186,7 +187,7 @@
             }
           }
         ],
-        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyMTUsInkiOjk1fSwiRU1TU2VuZE1lc3NhZ2UiOnsieCI6NDM3LCJ5Ijo4OH0sIlJlcGx5VG9UcmlnZ2VyIjp7IngiOjY1MywieSI6OTZ9fQ==",
+        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyMTcsInkiOjk2fSwiRU1TU2VuZE1lc3NhZ2UiOnsieCI6NDM3LCJ5Ijo4OH0sIlJlcGx5VG9UcmlnZ2VyIjp7IngiOjY1MywieSI6OTZ9fQ==",
         "metadata": {
           "input": [
             {
@@ -297,7 +298,7 @@
       }
     }
   },
-  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsicmVmIjoiZ2l0aHViLmNvbS90aWJjby9mbG9nby1lbXMvc3JjL2FwcC9FTVMiLCJpZCI6IkVNUyIsInZlcnNpb24iOiIxLjAuMCIsInRhZyI6IjEuMC4wLWIxMyIsIm5hbWUiOiJUSUJDTyBFbnRlcnByaXNlIE1lc3NhZ2UgU2VydmljZSIsInMzbG9jYXRpb24iOiJUaWJjby9FTVMiLCJpc1VzZXJFeHRlbnNpb24iOmZhbHNlfSx7ImlkIjoiZmxvZ29YcGF0aCIsInJlZiI6ImdpdGh1Yi5jb20vZGF2ZXdpbnMvRmxvZ29Xb3Jrc3BhY2UvZnVuY3Rpb25zL2Zsb2dvWHBhdGgiLCJuYW1lIjoieHBhdGgiLCJ2ZXJzaW9uIjoiMC4wLjEiLCJ0YWciOiIwLjAuMSIsInMzbG9jYXRpb24iOiJ7VVNFUklEfS9mbG9nb1hwYXRoIiwiaXNVc2VyRXh0ZW5zaW9uIjp0cnVlfV0=",
+  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsicmVmIjoiZ2l0aHViLmNvbS90aWJjby9mbG9nby1lbXMvc3JjL2FwcC9FTVMiLCJpZCI6IkVNUyIsInZlcnNpb24iOiIxLjAuMCIsInRhZyI6IjEuMC4wLWIxMyIsIm5hbWUiOiJUSUJDTyBFbnRlcnByaXNlIE1lc3NhZ2UgU2VydmljZSIsInMzbG9jYXRpb24iOiJUaWJjby9FTVMiLCJpc1VzZXJFeHRlbnNpb24iOmZhbHNlfSx7ImlkIjoieG1sIiwicmVmIjoiZ2l0aHViLmNvbS9kYXZld2lucy9GbG9nb1dvcmtzcGFjZS9mdW5jdGlvbnMveG1sIiwibmFtZSI6InhwYXRoIiwidmVyc2lvbiI6IjAuMC4xYSIsInRhZyI6IjAuMC4xYSIsInMzbG9jYXRpb24iOiJ7VVNFUklEfS94bWwiLCJpc1VzZXJFeHRlbnNpb24iOnRydWV9XQ==",
   "metadata": {
     "endpoints": [
       {
