@@ -6,7 +6,7 @@
     "github.com/tibco/wi-plugins/contributions/http/src/app/HTTP/trigger/server",
     "github.com/project-flogo/contrib/function/array",
     "git.tibco.com/git/product/ipaas/wi-contrib.git/function/boolean",
-    "github.com/davewins/xml"
+    "github.com/davewins/FlogoWorkspacefunctions/xml"
   ],
   "name": "XPathTest",
   "description": "",
@@ -162,7 +162,7 @@
   ],
   "properties": [],
   "connections": {},
-  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsiaWQiOiJ4bWwiLCJyZWYiOiJnaXRodWIuY29tL2RhdmV3aW5zL3htbCIsIm5hbWUiOiJ4cGF0aCIsInZlcnNpb24iOiIwLjAuMWEiLCJ0YWciOiIwLjAuMWEiLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0veG1sIiwiaXNVc2VyRXh0ZW5zaW9uIjp0cnVlfV0=",
+  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsiaWQiOiJ4bWwiLCJyZWYiOiJnaXRodWIuY29tL2RhdmV3aW5zL0Zsb2dvV29ya3NwYWNlZnVuY3Rpb25zL3htbCIsIm5hbWUiOiJ4cGF0aCIsInZlcnNpb24iOiIwLjAuMWEiLCJ0YWciOiIwLjAuMWEiLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0veG1sIiwiaXNVc2VyRXh0ZW5zaW9uIjp0cnVlfV0=",
   "metadata": {
     "endpoints": [
       {
