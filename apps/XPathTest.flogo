@@ -6,7 +6,7 @@
     "github.com/project-flogo/contrib/activity/actreturn",
     "github.com/tibco/wi-plugins/contributions/http/src/app/HTTP/trigger/server",
     "github.com/project-flogo/contrib/function/array",
-    "github.com/project-flogo/contrib/function/coerce",
+    "github.com/project-flogo/contrib/function/string",
     "git.tibco.com/git/product/ipaas/wi-contrib.git/function/boolean",
     "github.com/davewins/FlogoWorkspace/functions/xml"
   ],
@@ -91,9 +91,16 @@
           {
             "id": 2,
             "from": "LogMessage",
+            "to": "LogMessage1",
+            "type": "label",
+            "label": "LogMessage to LogMessage1"
+          },
+          {
+            "id": 3,
+            "from": "LogMessage1",
             "to": "Return",
             "type": "label",
-            "label": "LogMessage to Return"
+            "label": "LogMessage1 to Return"
           }
         ],
         "tasks": [
@@ -114,7 +121,21 @@
               "input": {
                 "Log Level": "INFO",
                 "flowInfo": false,
-                "message": "=xml.xpath(coerce.toString($flow.queryParams), $flow.requestBody, boolean.true())",
+                "message": "=string.concat(\"Received XPATH:\",$flow.queryParams.xpath)",
+                "logLevel": ""
+              }
+            }
+          },
+          {
+            "id": "LogMessage1",
+            "name": "LogMessage1",
+            "description": "Simple Log Message Activity",
+            "activity": {
+              "ref": "#log",
+              "input": {
+                "Log Level": "INFO",
+                "flowInfo": false,
+                "message": "=xml.xpath($flow.queryParams.xpath, $flow.requestBody, boolean.true())",
                 "logLevel": ""
               }
             }
@@ -128,13 +149,19 @@
               "settings": {
                 "mappings": {
                   "statusCode": 200,
-                  "responseBody": "ok"
+                  "responseBody": "=xml.xpath($flow.queryParams.xpath, $flow.requestBody, boolean.true())",
+                  "headers": "=$flow.headers",
+                  "cookies": {
+                    "mapping": [
+                      ""
+                    ]
+                  }
                 }
               }
             }
           }
         ],
-        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyNjAsInkiOjk2fSwiUmV0dXJuIjp7IngiOjYzMCwieSI6OTl9fQ==",
+        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyNjAsInkiOjk3fSwiTG9nTWVzc2FnZTEiOnsieCI6NTE1LCJ5Ijo5M30sIlJldHVybiI6eyJ4Ijo3ODYsInkiOjk0fX0=",
         "metadata": {
           "input": [
             {
