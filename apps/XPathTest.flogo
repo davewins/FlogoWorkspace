@@ -1,0 +1,195 @@
+{
+  "imports": [
+    "github.com/project-flogo/flow",
+    "github.com/project-flogo/contrib/activity/noop",
+    "github.com/tibco/flogo-general/src/app/General/activity/log",
+    "github.com/tibco/wi-plugins/contributions/http/src/app/HTTP/trigger/server",
+    "github.com/project-flogo/contrib/function/array",
+    "git.tibco.com/git/product/ipaas/wi-contrib.git/function/boolean",
+    "github.com/davewins/xml"
+  ],
+  "name": "XPathTest",
+  "description": "",
+  "version": "1.0.0",
+  "type": "flogo:app",
+  "appModel": "1.1.1",
+  "tags": [],
+  "triggers": [
+    {
+      "ref": "#server",
+      "name": "tibco-flogo-http-trigger",
+      "description": "A simple HTTP server",
+      "settings": {
+        "port": 9173,
+        "processingMode": "Data"
+      },
+      "id": "HTTPServer",
+      "handlers": [
+        {
+          "description": "",
+          "settings": {
+            "contextPath": "/dest",
+            "mode": "Proxy",
+            "reqMethod": "POST"
+          },
+          "action": {
+            "ref": "github.com/project-flogo/flow",
+            "settings": {
+              "flowURI": "res://flow:New_flow"
+            },
+            "input": {
+              "pathParams": "=$.pathParams",
+              "headers": "=$.queryParams",
+              "method": "=$.method",
+              "requestBody": "=$.requestBody"
+            },
+            "output": {
+              "statusCode": "=$.statusCode",
+              "headers": "=$.headers",
+              "responseBody": "=$.responseBody",
+              "cookies": {
+                "mapping": {
+                  "@foreach($.cookies, cookies)": {
+                    "=": "$loop"
+                  }
+                }
+              }
+            }
+          },
+          "schemas": {
+            "output": {
+              "proxyData": {
+                "type": "json",
+                "value": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"\",\"type\":\"undefined\"}",
+                "fe_metadata": "\"\"",
+                "feSchemaMap": {}
+              }
+            }
+          },
+          "name": "New_flow"
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "flow:New_flow",
+      "data": {
+        "name": "New_flow",
+        "description": "",
+        "links": [
+          {
+            "id": 1,
+            "from": "StartActivity",
+            "to": "LogMessage",
+            "type": "label",
+            "label": "StartActivity to LogMessage"
+          }
+        ],
+        "tasks": [
+          {
+            "id": "StartActivity",
+            "name": "StartActivity",
+            "description": "NoOp Activity",
+            "activity": {
+              "ref": "#noop"
+            }
+          },
+          {
+            "id": "LogMessage",
+            "name": "LogMessage",
+            "description": "Simple Log Message Activity",
+            "activity": {
+              "ref": "#log",
+              "input": {
+                "Log Level": "INFO",
+                "flowInfo": false,
+                "message": "=xml.xpath(\"/root/transactions[transaction/@id=1]\", $flow.requestBody, boolean.true())",
+                "logLevel": ""
+              }
+            }
+          }
+        ],
+        "fe_metadata": "eyJTdGFydEFjdGl2aXR5Ijp7IngiOjEwMCwieSI6MTAwfSwiTG9nTWVzc2FnZSI6eyJ4IjoyNTgsInkiOjkxfX0=",
+        "metadata": {
+          "input": [
+            {
+              "name": "pathParams",
+              "type": "params"
+            },
+            {
+              "name": "queryParams",
+              "type": "params"
+            },
+            {
+              "name": "headers",
+              "type": "params"
+            },
+            {
+              "name": "method",
+              "type": "string"
+            },
+            {
+              "name": "requestBody",
+              "type": "any"
+            }
+          ],
+          "output": [
+            {
+              "name": "statusCode",
+              "type": "integer"
+            },
+            {
+              "name": "headers",
+              "type": "params"
+            },
+            {
+              "name": "responseBody",
+              "type": "any"
+            },
+            {
+              "name": "cookies",
+              "type": "array"
+            }
+          ],
+          "fe_metadata": {
+            "input": "{\"type\":\"object\",\"title\":\"HTTPServer\",\"properties\":{\"pathParams\":{\"type\":\"params\"},\"queryParams\":{\"type\":\"params\"},\"headers\":{\"type\":\"params\"},\"method\":{\"type\":\"string\",\"required\":false},\"requestBody\":{\"type\":\"any\",\"required\":false}}}",
+            "output": "{\"type\":\"object\",\"title\":\"Inputs\",\"properties\":{\"statusCode\":{\"type\":\"integer\",\"required\":false},\"headers\":{\"type\":\"params\",\"enablecoercing\":true},\"responseBody\":{\"type\":\"any\",\"required\":false,\"enablecoercing\":true},\"cookies\":{\"type\":\"array\",\"enablecoercing\":true}},\"required\":[]}"
+          }
+        }
+      }
+    }
+  ],
+  "properties": [],
+  "connections": {},
+  "contrib": "W3sicmVmIjoiZ2l0aHViLmNvbS90aWJjby93aS1wbHVnaW5zL2NvbnRyaWJ1dGlvbnMvaHR0cC9zcmMvYXBwL0hUVFAiLCJpZCI6IkhUVFAiLCJ2ZXJzaW9uIjoiMS4xLjEiLCJ0YWciOiIxLjEuMS1iMDMiLCJuYW1lIjoiSFRUUCIsInMzbG9jYXRpb24iOiJUaWJjby9IVFRQIiwiaXNVc2VyRXh0ZW5zaW9uIjpmYWxzZX0seyJyZWYiOiJnaXRodWIuY29tL3RpYmNvL2Zsb2dvLWdlbmVyYWwvc3JjL2FwcC9HZW5lcmFsIiwiaWQiOiJHZW5lcmFsIiwidmVyc2lvbiI6IjEuNi4yIiwidGFnIjoiMS42LjItYjAyIiwibmFtZSI6IkdlbmVyYWwiLCJzM2xvY2F0aW9uIjoiVGliY28vR2VuZXJhbCIsImlzVXNlckV4dGVuc2lvbiI6ZmFsc2V9LHsiaWQiOiJ4bWwiLCJyZWYiOiJnaXRodWIuY29tL2RhdmV3aW5zL3htbCIsIm5hbWUiOiJ4cGF0aCIsInZlcnNpb24iOiIwLjAuMWEiLCJ0YWciOiIwLjAuMWEiLCJzM2xvY2F0aW9uIjoie1VTRVJJRH0veG1sIiwiaXNVc2VyRXh0ZW5zaW9uIjp0cnVlfV0=",
+  "metadata": {
+    "endpoints": [
+      {
+        "protocol": "http",
+        "port": "9173",
+        "title": "HTTPServer",
+        "type": "public",
+        "swagger": {
+          "swagger": "2.0",
+          "info": {
+            "title": "HTTPServer",
+            "version": "1.0.0",
+            "description": "A simple HTTP server"
+          },
+          "paths": {
+            "/dest": {
+              "post": {
+                "summary": "New_flow",
+                "operationId": "postdest",
+                "parameters": [],
+                "responses": {}
+              }
+            }
+          }
+        }
+      }
+    ],
+    "flogoVersion": "2.25.1"
+  }
+}
